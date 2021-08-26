@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 
-function App() {
+let App = () => {
+  //others
+
+  let element = useElements();
+  let stripe = useStripe();
+
+  let cardElementOptions = {
+    style: {
+      base: {
+        "::placeholder": {
+          color: "green",
+        },
+        iconColor: "blue",
+      },
+      invalid: {},
+      complete: {},
+    },
+    hidePostalCode: true,
+  };
+
+  let handleClick = () => {
+    let cardElemet = element.getElement(CardElement);
+
+    let paymentReq = stripe.createPaymentMethod({
+      type: "card",
+      card: cardElemet,
+      billing_details: {
+        name: "roosev",
+        email: "aravindk6066@gmail.com",
+      },
+    });
+  };
+
+  //return statements
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ width: "400px" }}>
+      <form style={{ margin: "40px" }}>
+        <input type="text" placeholder="enter name" />
+        <br />
+        <input type="text" placeholder="enter email" />
+        <br />
+        <CardElement options={cardElementOptions} />
+        <button type="submit" onClick={handleClick}>
+          Submit
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default App;
